@@ -1,13 +1,16 @@
 import { cn } from "@/lib/cn";
 import type { Team } from "@/lib/types";
 
-/** Logo (o bandera/escudo) + nombre de un equipo (o TBD si aún no se conoce). */
+/** Bandera + nombre de un equipo. Si no hay equipo, muestra la etiqueta de
+ *  eliminatoria ("2A", "1E"…) o "Por definir". */
 export function TeamBadge({
   team,
+  label,
   align = "left",
   className,
 }: {
   team: Team | null;
+  label?: string | null;
   align?: "left" | "right";
   className?: string;
 }) {
@@ -20,8 +23,8 @@ export function TeamBadge({
       )}
     >
       <TeamCrest team={team} />
-      <span className="font-medium truncate">
-        {team?.name ?? "Por definir"}
+      <span className={cn("font-medium truncate", !team && "text-muted")}>
+        {team?.name ?? label ?? "Por definir"}
       </span>
     </div>
   );

@@ -31,6 +31,8 @@ export interface Match {
   group_letter: string | null;
   home_team_id: number | null;
   away_team_id: number | null;
+  home_label: string | null;
+  away_label: string | null;
   kickoff_at: string;
   stadium: string | null;
   city: string | null;

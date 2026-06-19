@@ -31,6 +31,8 @@ create table if not exists matches (
   group_letter text,
   home_team_id integer references teams(id),
   away_team_id integer references teams(id),
+  home_label   text,
+  away_label   text,
   kickoff_at   timestamptz not null,
   stadium      text,
   city         text,

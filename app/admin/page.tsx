@@ -34,8 +34,9 @@ export default async function AdminPage() {
       <Card>
         <CardContent className="py-4 space-y-2">
           <p className="text-sm text-muted">
-            Trae fixture, estadios y marcadores del Mundial desde API-Football.
-            Se ejecuta solo cada 20 min, pero podés forzarlo acá.
+            Trae el fixture oficial, estadios y marcadores del Mundial (fuente
+            gratuita). Tocá el botón cuando quieras actualizar; recalcula los
+            puntos solo.
           </p>
           <SyncButton />
         </CardContent>

@@ -1,11 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
 import {
-  fetchWorldCupFixtures,
-  parseRound,
-  isFinished,
-  regulationScore,
-  type ApiFixture,
-} from "./apifootball";
+  fetchFeed,
+  TEAM_INFO,
+  groupLetter,
+  stageFromRound,
+  toIso,
+  cityFromLocation,
+  knockoutLabel,
+} from "./fixture";
 import { scorePrediction } from "./scoring";
 import type { Prediction } from "./types";
 
@@ -23,8 +25,8 @@ function client() {
   return createClient(url, key, { auth: { persistSession: false } });
 }
 
-function code(name: string): string {
-  return name
+function code(es: string): string {
+  return es
     .normalize("NFD")
     .replace(/[^a-zA-Z ]/g, "")
     .trim()
@@ -33,48 +35,44 @@ function code(name: string): string {
 }
 
 /**
- * Sincroniza el Mundial desde API-Football hacia Supabase:
- *  - upsert de equipos (con grupo y logo) y partidos (estadio, ciudad, hora),
- *  - marca finished + score de 90' en los terminados,
- *  - recalcula los puntos de las predicciones de esos partidos.
- * Idempotente: no toca predicciones de partidos no terminados.
+ * Sincroniza el Mundial desde el feed gratuito hacia Supabase:
+ *  - equipos (id estable, nombre en español, bandera y grupo),
+ *  - partidos (estadio, ciudad, hora; etiquetas "2A" en eliminatorias),
+ *  - marca finished + score y recalcula los puntos de esos partidos.
+ * Idempotente. Lo dispara el admin a mano (botón) o por CLI (`pnpm fixture`).
  */
-export async function runSync(apiKey: string): Promise<SyncSummary> {
-  const fixtures = await fetchWorldCupFixtures(apiKey);
+export async function runSync(): Promise<SyncSummary> {
+  const feed = await fetchFeed();
   const db = client();
+  const maxMatch = Math.max(...feed.map((m) => m.MatchNumber));
 
-  // 1) Equipos (id = id de API). Grupo se toma de los partidos de grupo.
-  const teams = new Map<
-    number,
-    { id: number; name: string; code: string; logo_url: string; group_letter: string | null }
-  >();
-  const groupByTeam = new Map<number, string>();
-
-  for (const f of fixtures) {
-    const { group } = parseRound(f.league.round);
-    for (const side of [f.teams.home, f.teams.away]) {
-      if (!side?.id) continue;
-      if (!teams.has(side.id)) {
-        teams.set(side.id, {
-          id: side.id,
-          name: side.name,
-          code: code(side.name),
-          logo_url: side.logo ?? null as unknown as string,
-          group_letter: null,
-        });
+  // 1) Equipos: nombres (en inglés del feed) de los partidos de grupo.
+  const groupNames = new Set<string>();
+  const teamGroup = new Map<string, string>();
+  for (const m of feed) {
+    const g = groupLetter(m.Group);
+    if (!g) continue;
+    for (const n of [m.HomeTeam, m.AwayTeam]) {
+      if (n in TEAM_INFO) {
+        groupNames.add(n);
+        teamGroup.set(n, g);
       }
-      if (group) groupByTeam.set(side.id, group);
     }
   }
-  for (const [id, g] of groupByTeam) {
-    const t = teams.get(id);
-    if (t) t.group_letter = g;
-  }
+  const sorted = [...groupNames].sort();
+  const teamId = new Map<string, number>();
+  sorted.forEach((n, i) => teamId.set(n, i + 1));
 
-  if (teams.size > 0) {
-    const { error } = await db
-      .from("teams")
-      .upsert([...teams.values()], { onConflict: "id" });
+  const teamRows = sorted.map((n) => ({
+    id: teamId.get(n)!,
+    name: TEAM_INFO[n].es,
+    code: code(TEAM_INFO[n].es),
+    flag_emoji: TEAM_INFO[n].flag,
+    logo_url: null,
+    group_letter: teamGroup.get(n) ?? null,
+  }));
+  if (teamRows.length) {
+    const { error } = await db.from("teams").upsert(teamRows, { onConflict: "id" });
     if (error) throw new Error(`upsert teams: ${error.message}`);
   }
 
@@ -82,52 +80,54 @@ export async function runSync(apiKey: string): Promise<SyncSummary> {
   const matchRows = [];
   const finishedActual = new Map<number, { home: number; away: number }>();
 
-  for (const f of fixtures) {
-    const { stage, group } = parseRound(f.league.round);
-    const finished = isFinished(f.fixture.status.short);
-    const actual = finished ? regulationScore(f) : null;
-    if (finished && actual) finishedActual.set(f.fixture.id, actual);
-
+  for (const m of feed) {
+    const stage = stageFromRound(m.RoundNumber, m.MatchNumber, maxMatch);
+    const finished = m.HomeTeamScore != null && m.AwayTeamScore != null;
+    if (finished) {
+      finishedActual.set(m.MatchNumber, {
+        home: m.HomeTeamScore as number,
+        away: m.AwayTeamScore as number,
+      });
+    }
     matchRows.push({
-      id: f.fixture.id,
+      id: m.MatchNumber,
       stage,
-      group_letter: group,
-      home_team_id: f.teams.home?.id || null,
-      away_team_id: f.teams.away?.id || null,
-      kickoff_at: f.fixture.date,
-      stadium: f.fixture.venue?.name ?? null,
-      city: f.fixture.venue?.city ?? null,
-      home_score: actual ? actual.home : null,
-      away_score: actual ? actual.away : null,
-      status: finished && actual ? "finished" : "scheduled",
+      group_letter: groupLetter(m.Group),
+      home_team_id: teamId.get(m.HomeTeam) ?? null,
+      away_team_id: teamId.get(m.AwayTeam) ?? null,
+      home_label: knockoutLabel(m.HomeTeam),
+      away_label: knockoutLabel(m.AwayTeam),
+      kickoff_at: toIso(m.DateUtc),
+      stadium: m.Location ?? null,
+      city: m.Location ? cityFromLocation(m.Location) : null,
+      home_score: finished ? m.HomeTeamScore : null,
+      away_score: finished ? m.AwayTeamScore : null,
+      status: finished ? "finished" : "scheduled",
     });
   }
-
-  if (matchRows.length > 0) {
-    const { error } = await db
-      .from("matches")
-      .upsert(matchRows, { onConflict: "id" });
+  if (matchRows.length) {
+    const { error } = await db.from("matches").upsert(matchRows, { onConflict: "id" });
     if (error) throw new Error(`upsert matches: ${error.message}`);
   }
 
   // 3) Recalcular puntos de las predicciones de partidos terminados.
   let recomputed = 0;
   const finishedIds = [...finishedActual.keys()];
-  if (finishedIds.length > 0) {
+  if (finishedIds.length) {
     const { data: preds, error } = await db
       .from("predictions")
       .select("*")
       .in("match_id", finishedIds);
     if (error) throw new Error(`leer predicciones: ${error.message}`);
 
-    const updated = (preds ?? []).map((p: Prediction) => {
-      const actual = finishedActual.get(p.match_id)!;
-      return {
-        ...p,
-        points: scorePrediction({ home: p.home_pred, away: p.away_pred }, actual),
-      };
-    });
-    if (updated.length > 0) {
+    const updated = (preds ?? []).map((p: Prediction) => ({
+      ...p,
+      points: scorePrediction(
+        { home: p.home_pred, away: p.away_pred },
+        finishedActual.get(p.match_id)!,
+      ),
+    }));
+    if (updated.length) {
       const { error: upErr } = await db
         .from("predictions")
         .upsert(updated, { onConflict: "user_id,match_id" });
@@ -137,7 +137,7 @@ export async function runSync(apiKey: string): Promise<SyncSummary> {
   }
 
   return {
-    teams: teams.size,
+    teams: teamRows.length,
     matches: matchRows.length,
     finished: finishedActual.size,
     recomputed,

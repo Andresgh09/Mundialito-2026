@@ -35,7 +35,7 @@ export function SyncButton() {
     <div className="space-y-2">
       <Button onClick={onClick} disabled={pending} variant="accent" className="w-full">
         <RefreshCw className={pending ? "h-4 w-4 animate-spin" : "h-4 w-4"} aria-hidden />
-        {pending ? "Sincronizando…" : "Sincronizar con API-Football"}
+        {pending ? "Actualizando…" : "Actualizar fixture y resultados"}
       </Button>
       {msg && <p className="text-sm text-muted">{msg}</p>}
     </div>

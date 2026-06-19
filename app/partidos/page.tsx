@@ -75,7 +75,7 @@ export default async function PartidosPage() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <TeamBadge team={m.home_team} className="flex-1" />
+                  <TeamBadge team={m.home_team} label={m.home_label} className="flex-1" />
                   <span
                     className={cn(
                       "shrink-0 rounded-lg px-3 py-1 font-display text-xl font-bold tabular-nums",
@@ -84,7 +84,7 @@ export default async function PartidosPage() {
                   >
                     {finished ? `${m.home_score} - ${m.away_score}` : "vs"}
                   </span>
-                  <TeamBadge team={m.away_team} align="right" className="flex-1" />
+                  <TeamBadge team={m.away_team} label={m.away_label} align="right" className="flex-1" />
                 </div>
 
                 <Venue stadium={m.stadium} city={m.city} className="mt-2 justify-center" />
