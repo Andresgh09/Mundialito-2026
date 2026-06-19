@@ -64,3 +64,11 @@ alter table teams       enable row level security;
 alter table matches     enable row level security;
 alter table predictions enable row level security;
 alter table app_config  enable row level security;
+
+-- Permisos para el rol service_role (la app accede solo con service-role,
+-- que además salta RLS). Necesario en proyectos donde no se auto-otorgan.
+grant usage on schema public to service_role;
+grant all privileges on all tables in schema public to service_role;
+grant all privileges on all sequences in schema public to service_role;
+alter default privileges in schema public grant all on tables to service_role;
+alter default privileges in schema public grant all on sequences to service_role;

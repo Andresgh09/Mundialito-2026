@@ -4,6 +4,7 @@ import { getSession } from "@/lib/auth";
 import { getLeaderboard, getMatches } from "@/lib/queries";
 import { isLocked } from "@/lib/lock";
 import { Leaderboard } from "@/components/leaderboard";
+import { PrizePool } from "@/components/prize-pool";
 import { TeamBadge } from "@/components/team-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,6 +29,8 @@ export default async function HomePage() {
         <h1 className="font-display text-4xl font-bold">Ranking</h1>
         <p className="text-muted">Mundial 2026 · la quiniela entre amigos</p>
       </header>
+
+      <PrizePool />
 
       {!user && (
         <Card className="border-primary/40 bg-primary/5">

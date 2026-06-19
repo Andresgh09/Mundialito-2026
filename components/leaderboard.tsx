@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { Crown, Target, Check } from "lucide-react";
 import type { LeaderRow } from "@/lib/queries";
+import { prizeForRank, formatCRC } from "@/lib/prizes";
 import { cn } from "@/lib/cn";
 
 const MEDAL = ["text-primary", "text-slate-300", "text-amber-700"];
@@ -32,6 +33,7 @@ export function Leaderboard({
       {rows.map((row, i) => {
         const rank = i + 1;
         const isMe = row.user_id === currentUserId;
+        const prize = prizeForRank(rank);
         return (
           <motion.li
             key={row.user_id}
@@ -71,6 +73,11 @@ export function Leaderboard({
                     <Check className="h-3 w-3" aria-hidden /> {row.result} resultados
                   </span>
                 </p>
+                {prize != null && (
+                  <span className="mt-1 inline-block rounded-md bg-primary/15 px-1.5 py-0.5 text-[11px] font-bold text-primary tabular-nums">
+                    {formatCRC(prize)}
+                  </span>
+                )}
               </div>
               <span className="shrink-0 text-right">
                 <span className="font-display text-2xl font-bold tabular-nums text-primary">
