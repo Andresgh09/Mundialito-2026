@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+/* ── Mundialito · tema oscuro festivo (navy + oro campeonato + verde cancha) ── */
+@theme {
+  --color-background: #0a0e1a;
+  --color-surface: #121829;
+  --color-card: #161d30;
+  --color-elevated: #1c2540;
+  --color-border: #283150;
+  --color-foreground: #f1f5f9;
+  --color-muted: #93a0bd;
+
+  --color-primary: #fbbf24; /* oro campeonato */
+  --color-primary-foreground: #1a1404;
+
+  --color-accent: #10b981; /* verde cancha */
+  --color-accent-foreground: #04140d;
+
+  --color-danger: #ef4444;
+  --color-gold-soft: #f5d77e;
+
+  --color-ring: #fbbf24;
+
+  --font-sans: var(--font-barlow), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-barlow-condensed), var(--font-barlow), sans-serif;
+
+  --radius: 0.9rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-background);
+    background-image:
+      radial-gradient(60rem 40rem at 85% -10%, rgba(251, 191, 36, 0.08), transparent 60%),
+      radial-gradient(50rem 40rem at -10% 0%, rgba(16, 185, 129, 0.07), transparent 55%);
+    background-attachment: fixed;
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  /* Inputs numéricos sin spinners (marcadores) */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

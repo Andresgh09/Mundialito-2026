@@ -1,0 +1,65 @@
+{
+  "_note": "BORRADOR del sorteo del Mundial 2026 (48 equipos, 12 grupos A-L). Andrés debe confirmar/reemplazar grupos, equipos y fechas contra el fixture OFICIAL. La app no depende de que estos datos sean exactos: edítalos aquí y vuelve a correr `pnpm seed`, o ajústalos desde /admin/partidos.",
+  "groupStageStart": "2026-06-11",
+  "teams": [
+    { "id": 1, "name": "México", "code": "MEX", "flag_emoji": "🇲🇽", "group_letter": "A" },
+    { "id": 2, "name": "Croacia", "code": "CRO", "flag_emoji": "🇭🇷", "group_letter": "A" },
+    { "id": 3, "name": "Ecuador", "code": "ECU", "flag_emoji": "🇪🇨", "group_letter": "A" },
+    { "id": 4, "name": "Marruecos", "code": "MAR", "flag_emoji": "🇲🇦", "group_letter": "A" },
+
+    { "id": 5, "name": "Canadá", "code": "CAN", "flag_emoji": "🇨🇦", "group_letter": "B" },
+    { "id": 6, "name": "Bélgica", "code": "BEL", "flag_emoji": "🇧🇪", "group_letter": "B" },
+    { "id": 7, "name": "Egipto", "code": "EGY", "flag_emoji": "🇪🇬", "group_letter": "B" },
+    { "id": 8, "name": "Uzbekistán", "code": "UZB", "flag_emoji": "🇺🇿", "group_letter": "B" },
+
+    { "id": 9, "name": "Estados Unidos", "code": "USA", "flag_emoji": "🇺🇸", "group_letter": "C" },
+    { "id": 10, "name": "Suiza", "code": "SUI", "flag_emoji": "🇨🇭", "group_letter": "C" },
+    { "id": 11, "name": "Paraguay", "code": "PAR", "flag_emoji": "🇵🇾", "group_letter": "C" },
+    { "id": 12, "name": "Catar", "code": "QAT", "flag_emoji": "🇶🇦", "group_letter": "C" },
+
+    { "id": 13, "name": "Argentina", "code": "ARG", "flag_emoji": "🇦🇷", "group_letter": "D" },
+    { "id": 14, "name": "Noruega", "code": "NOR", "flag_emoji": "🇳🇴", "group_letter": "D" },
+    { "id": 15, "name": "Australia", "code": "AUS", "flag_emoji": "🇦🇺", "group_letter": "D" },
+    { "id": 16, "name": "Jordania", "code": "JOR", "flag_emoji": "🇯🇴", "group_letter": "D" },
+
+    { "id": 17, "name": "Francia", "code": "FRA", "flag_emoji": "🇫🇷", "group_letter": "E" },
+    { "id": 18, "name": "Senegal", "code": "SEN", "flag_emoji": "🇸🇳", "group_letter": "E" },
+    { "id": 19, "name": "Japón", "code": "JPN", "flag_emoji": "🇯🇵", "group_letter": "E" },
+    { "id": 20, "name": "Panamá", "code": "PAN", "flag_emoji": "🇵🇦", "group_letter": "E" },
+
+    { "id": 21, "name": "Brasil", "code": "BRA", "flag_emoji": "🇧🇷", "group_letter": "F" },
+    { "id": 22, "name": "Dinamarca", "code": "DEN", "flag_emoji": "🇩🇰", "group_letter": "F" },
+    { "id": 23, "name": "Corea del Sur", "code": "KOR", "flag_emoji": "🇰🇷", "group_letter": "F" },
+    { "id": 24, "name": "Túnez", "code": "TUN", "flag_emoji": "🇹🇳", "group_letter": "F" },
+
+    { "id": 25, "name": "Inglaterra", "code": "ENG", "flag_emoji": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "group_letter": "G" },
+    { "id": 26, "name": "Colombia", "code": "COL", "flag_emoji": "🇨🇴", "group_letter": "G" },
+    { "id": 27, "name": "Irán", "code": "IRN", "flag_emoji": "🇮🇷", "group_letter": "G" },
+    { "id": 28, "name": "Costa Rica", "code": "CRC", "flag_emoji": "🇨🇷", "group_letter": "G" },
+
+    { "id": 29, "name": "España", "code": "ESP", "flag_emoji": "🇪🇸", "group_letter": "H" },
+    { "id": 30, "name": "Serbia", "code": "SRB", "flag_emoji": "🇷🇸", "group_letter": "H" },
+    { "id": 31, "name": "Costa de Marfil", "code": "CIV", "flag_emoji": "🇨🇮", "group_letter": "H" },
+    { "id": 32, "name": "Nueva Zelanda", "code": "NZL", "flag_emoji": "🇳🇿", "group_letter": "H" },
+
+    { "id": 33, "name": "Portugal", "code": "POR", "flag_emoji": "🇵🇹", "group_letter": "I" },
+    { "id": 34, "name": "Uruguay", "code": "URU", "flag_emoji": "🇺🇾", "group_letter": "I" },
+    { "id": 35, "name": "Ghana", "code": "GHA", "flag_emoji": "🇬🇭", "group_letter": "I" },
+    { "id": 36, "name": "Arabia Saudita", "code": "KSA", "flag_emoji": "🇸🇦", "group_letter": "I" },
+
+    { "id": 37, "name": "Países Bajos", "code": "NED", "flag_emoji": "🇳🇱", "group_letter": "J" },
+    { "id": 38, "name": "Austria", "code": "AUT", "flag_emoji": "🇦🇹", "group_letter": "J" },
+    { "id": 39, "name": "Nigeria", "code": "NGA", "flag_emoji": "🇳🇬", "group_letter": "J" },
+    { "id": 40, "name": "Curazao", "code": "CUW", "flag_emoji": "🇨🇼", "group_letter": "J" },
+
+    { "id": 41, "name": "Alemania", "code": "GER", "flag_emoji": "🇩🇪", "group_letter": "K" },
+    { "id": 42, "name": "Ucrania", "code": "UKR", "flag_emoji": "🇺🇦", "group_letter": "K" },
+    { "id": 43, "name": "Camerún", "code": "CMR", "flag_emoji": "🇨🇲", "group_letter": "K" },
+    { "id": 44, "name": "Perú", "code": "PER", "flag_emoji": "🇵🇪", "group_letter": "K" },
+
+    { "id": 45, "name": "Polonia", "code": "POL", "flag_emoji": "🇵🇱", "group_letter": "L" },
+    { "id": 46, "name": "Argelia", "code": "ALG", "flag_emoji": "🇩🇿", "group_letter": "L" },
+    { "id": 47, "name": "Suecia", "code": "SWE", "flag_emoji": "🇸🇪", "group_letter": "L" },
+    { "id": 48, "name": "Cabo Verde", "code": "CPV", "flag_emoji": "🇨🇻", "group_letter": "L" }
+  ]
+}
