@@ -14,16 +14,17 @@ create table if not exists profiles (
   created_at   timestamptz not null default now()
 );
 
--- Equipos -------------------------------------------------------------------
+-- Equipos (id = id de API-Football) -----------------------------------------
 create table if not exists teams (
   id           integer primary key,
   name         text not null,
   code         text not null,
   flag_emoji   text not null default '',
+  logo_url     text,
   group_letter text
 );
 
--- Partidos ------------------------------------------------------------------
+-- Partidos (id = id de fixture de API-Football) -----------------------------
 create table if not exists matches (
   id           integer primary key,
   stage        text not null check (stage in ('group','r32','r16','qf','sf','third','final')),
@@ -31,6 +32,8 @@ create table if not exists matches (
   home_team_id integer references teams(id),
   away_team_id integer references teams(id),
   kickoff_at   timestamptz not null,
+  stadium      text,
+  city         text,
   home_score   integer,
   away_score   integer,
   status       text not null default 'scheduled' check (status in ('scheduled','finished'))

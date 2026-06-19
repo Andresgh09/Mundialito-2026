@@ -1,0 +1,22 @@
+name: Sync Mundial (API-Football)
+
+# Motor real de sincronización: cada 20 min llama a /api/sync de la app
+# desplegada. Requiere dos secrets del repo (Settings → Secrets → Actions):
+#   SYNC_URL    = https://<tu-app>.vercel.app/api/sync
+#   CRON_SECRET = el mismo valor que pusiste en Vercel
+on:
+  schedule:
+    - cron: "*/20 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Llamar al endpoint de sync
+        run: |
+          curl -fsS -X GET "$SYNC_URL" \
+            -H "Authorization: Bearer $CRON_SECRET"
+        env:
+          SYNC_URL: ${{ secrets.SYNC_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}

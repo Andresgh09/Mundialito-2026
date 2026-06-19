@@ -8,6 +8,7 @@ import { STAGE_LABEL } from "@/lib/types";
 import { formatKickoff } from "@/lib/format";
 import { savePredictions, type SaveResult } from "@/app/actions/predictions";
 import { TeamBadge } from "@/components/team-badge";
+import { Venue } from "@/components/venue";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 
@@ -155,6 +156,7 @@ export function PredictionBoard({
                       {formatKickoff(m.kickoff_at)}
                     </span>
                   </div>
+                  <Venue stadium={m.stadium} city={m.city} className="mb-2" />
                   <div className="flex items-center gap-2">
                     <TeamBadge team={m.home_team} className="flex-1" />
                     <div className="flex items-center gap-1.5 shrink-0">

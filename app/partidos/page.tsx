@@ -3,6 +3,7 @@ import { getMatches, getAllPredictions, getProfiles } from "@/lib/queries";
 import { isLocked } from "@/lib/lock";
 import { STAGE_LABEL, type MatchWithTeams } from "@/lib/types";
 import { TeamBadge } from "@/components/team-badge";
+import { Venue } from "@/components/venue";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatKickoff } from "@/lib/format";
 import { Lock } from "lucide-react";
@@ -85,6 +86,8 @@ export default async function PartidosPage() {
                   </span>
                   <TeamBadge team={m.away_team} align="right" className="flex-1" />
                 </div>
+
+                <Venue stadium={m.stadium} city={m.city} className="mt-2 justify-center" />
 
                 {locked && mPreds.length > 0 && (
                   <details className="mt-3 group">

@@ -6,6 +6,7 @@ import { isLocked } from "@/lib/lock";
 import { Leaderboard } from "@/components/leaderboard";
 import { PrizePool } from "@/components/prize-pool";
 import { TeamBadge } from "@/components/team-badge";
+import { Venue } from "@/components/venue";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatKickoffShort } from "@/lib/format";
@@ -63,12 +64,15 @@ export default async function HomePage() {
           <div className="space-y-2">
             {upcoming.map((m) => (
               <Card key={m.id}>
-                <CardContent className="flex items-center gap-2 py-3">
-                  <TeamBadge team={m.home_team} className="flex-1" />
-                  <span className="shrink-0 text-xs text-muted tabular-nums">
-                    {formatKickoffShort(m.kickoff_at)}
-                  </span>
-                  <TeamBadge team={m.away_team} align="right" className="flex-1" />
+                <CardContent className="py-3">
+                  <div className="flex items-center gap-2">
+                    <TeamBadge team={m.home_team} className="flex-1" />
+                    <span className="shrink-0 text-xs text-muted tabular-nums">
+                      {formatKickoffShort(m.kickoff_at)}
+                    </span>
+                    <TeamBadge team={m.away_team} align="right" className="flex-1" />
+                  </div>
+                  <Venue stadium={m.stadium} city={m.city} className="mt-2 justify-center" />
                 </CardContent>
               </Card>
             ))}

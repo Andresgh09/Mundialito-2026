@@ -21,6 +21,7 @@ export interface Team {
   name: string;
   code: string;
   flag_emoji: string;
+  logo_url: string | null;
   group_letter: string | null;
 }
 
@@ -31,6 +32,8 @@ export interface Match {
   home_team_id: number | null;
   away_team_id: number | null;
   kickoff_at: string;
+  stadium: string | null;
+  city: string | null;
   home_score: number | null;
   away_score: number | null;
   status: MatchStatus;

@@ -3,6 +3,7 @@ import { CalendarCheck, Grid3x3, KeyRound, Users } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
 import { getMatches, getProfiles, getConfig } from "@/lib/queries";
 import { Card, CardContent } from "@/components/ui/card";
+import { SyncButton } from "@/components/sync-button";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,16 @@ export default async function AdminPage() {
         <Stat icon={<CalendarCheck className="h-4 w-4" />} label="Jugados" value={finished} />
         <Stat icon={<Grid3x3 className="h-4 w-4" />} label="Pendientes" value={pending} />
       </div>
+
+      <Card>
+        <CardContent className="py-4 space-y-2">
+          <p className="text-sm text-muted">
+            Trae fixture, estadios y marcadores del Mundial desde API-Football.
+            Se ejecuta solo cada 20 min, pero podés forzarlo acá.
+          </p>
+          <SyncButton />
+        </CardContent>
+      </Card>
 
       <div className="space-y-2">
         <AdminLink
