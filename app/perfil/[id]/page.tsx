@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { Target, Check, X } from "lucide-react";
 import { getProfile, getMatches, getUserPredictions } from "@/lib/queries";
-import { STAGE_LABEL } from "@/lib/types";
+import { StageBadge } from "@/components/stage-badge";
 import { TeamBadge } from "@/components/team-badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatKickoffShort } from "@/lib/format";
@@ -81,11 +81,7 @@ export default async function PerfilPage({
                 <Card key={p.id}>
                   <CardContent className="py-3">
                     <div className="flex items-center justify-between text-xs text-muted mb-1.5">
-                      <span>
-                        {m.stage === "group" && m.group_letter
-                          ? `Grupo ${m.group_letter}`
-                          : STAGE_LABEL[m.stage]}
-                      </span>
+                      <StageBadge stage={m.stage} group={m.group_letter} />
                       <span>{formatKickoffShort(m.kickoff_at)}</span>
                     </div>
                     <div className="flex items-center gap-2">

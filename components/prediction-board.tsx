@@ -4,7 +4,7 @@ import * as React from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Save, CheckCircle2, Clock } from "lucide-react";
 import type { MatchWithTeams } from "@/lib/types";
-import { STAGE_LABEL } from "@/lib/types";
+import { StageBadge } from "@/components/stage-badge";
 import { formatKickoff } from "@/lib/format";
 import { savePredictions, type SaveResult } from "@/app/actions/predictions";
 import { TeamBadge } from "@/components/team-badge";
@@ -144,11 +144,7 @@ export function PredictionBoard({
                   className="rounded-[var(--radius)] border border-border bg-card p-3"
                 >
                   <div className="flex items-center justify-between text-xs text-muted mb-2">
-                    <span>
-                      {m.stage === "group" && m.group_letter
-                        ? `Grupo ${m.group_letter}`
-                        : STAGE_LABEL[m.stage]}
-                    </span>
+                    <StageBadge stage={m.stage} group={m.group_letter} />
                     <span className="flex items-center gap-1">
                       {isSaved && (
                         <CheckCircle2 className="h-3.5 w-3.5 text-accent" aria-hidden />

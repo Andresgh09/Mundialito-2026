@@ -1,8 +1,9 @@
 import { getSession } from "@/lib/auth";
 import { getMatches, getAllPredictions, getProfiles } from "@/lib/queries";
 import { isLocked } from "@/lib/lock";
-import { STAGE_LABEL, type MatchWithTeams } from "@/lib/types";
+import { type MatchWithTeams } from "@/lib/types";
 import { TeamBadge } from "@/components/team-badge";
+import { StageBadge } from "@/components/stage-badge";
 import { Venue } from "@/components/venue";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatKickoff } from "@/lib/format";
@@ -63,11 +64,7 @@ export default async function PartidosPage() {
             <Card key={m.id}>
               <CardContent className="py-3">
                 <div className="flex items-center justify-between text-xs text-muted mb-2">
-                  <span>
-                    {m.stage === "group" && m.group_letter
-                      ? `Grupo ${m.group_letter}`
-                      : STAGE_LABEL[m.stage]}
-                  </span>
+                  <StageBadge stage={m.stage} group={m.group_letter} />
                   <span className="flex items-center gap-1">
                     {locked && !finished && <Lock className="h-3 w-3" aria-hidden />}
                     {formatKickoff(m.kickoff_at)}

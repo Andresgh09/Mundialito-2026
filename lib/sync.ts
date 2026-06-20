@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import {
   fetchFeed,
   TEAM_INFO,
+  flagUrl,
   groupLetter,
   stageFromRound,
   toIso,
@@ -68,7 +69,7 @@ export async function runSync(): Promise<SyncSummary> {
     name: TEAM_INFO[n].es,
     code: code(TEAM_INFO[n].es),
     flag_emoji: TEAM_INFO[n].flag,
-    logo_url: null,
+    logo_url: flagUrl(TEAM_INFO[n].iso),
     group_letter: teamGroup.get(n) ?? null,
   }));
   if (teamRows.length) {

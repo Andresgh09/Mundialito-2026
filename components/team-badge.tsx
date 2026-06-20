@@ -44,11 +44,9 @@ export function TeamCrest({
       <img
         src={team.logo_url}
         alt={team.name}
-        width={size}
-        height={size}
         loading="lazy"
-        className="shrink-0 object-contain"
-        style={{ width: size, height: size }}
+        className="shrink-0 rounded-[3px] object-cover ring-1 ring-border"
+        style={{ height: Math.round(size * 0.72), width: "auto" }}
       />
     );
   }

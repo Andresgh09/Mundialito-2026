@@ -39,7 +39,7 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <SiteNav user={user} />
-        <main className="flex-1 w-full max-w-3xl mx-auto px-4 pb-24 pt-6">
+        <main className="flex-1 w-full max-w-3xl mx-auto px-4 pb-16 pt-6">
           {children}
         </main>
       </body>

@@ -4,6 +4,7 @@ import { getSession } from "@/lib/auth";
 import { getLeaderboard, getMatches } from "@/lib/queries";
 import { isLocked } from "@/lib/lock";
 import { Leaderboard } from "@/components/leaderboard";
+import { LoserCard } from "@/components/loser-card";
 import { PrizePool } from "@/components/prize-pool";
 import { TeamBadge } from "@/components/team-badge";
 import { Venue } from "@/components/venue";
@@ -27,7 +28,9 @@ export default async function HomePage() {
   return (
     <div className="space-y-8">
       <header className="text-center pt-2">
-        <h1 className="font-display text-4xl font-bold">Ranking</h1>
+        <h1 className="font-display text-4xl font-bold bg-gradient-to-r from-gold-soft via-primary to-accent bg-clip-text text-transparent">
+          Ranking
+        </h1>
         <p className="text-muted">Mundial 2026 · la quiniela entre amigos</p>
       </header>
 
@@ -49,6 +52,10 @@ export default async function HomePage() {
       )}
 
       <Leaderboard rows={rows} currentUserId={user?.id} />
+
+      {rows.length >= 4 && (
+        <LoserCard row={rows[rows.length - 1]} currentUserId={user?.id} />
+      )}
 
       {upcoming.length > 0 && (
         <section>

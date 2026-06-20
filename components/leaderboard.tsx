@@ -45,9 +45,11 @@ export function Leaderboard({
               href={`/perfil/${row.user_id}`}
               className={cn(
                 "flex items-center gap-3 rounded-[var(--radius)] border p-3 transition-colors cursor-pointer",
-                isMe
-                  ? "border-primary/50 bg-primary/5"
-                  : "border-border bg-card hover:bg-elevated",
+                rank === 1 && "border-primary/40 bg-primary/10",
+                rank === 2 && "border-slate-300/30 bg-slate-300/10",
+                rank === 3 && "border-amber-600/40 bg-amber-600/10",
+                rank > 3 && "border-border bg-card hover:bg-elevated",
+                isMe && "ring-2 ring-primary/60",
               )}
             >
               <span className="w-7 shrink-0 text-center font-display text-lg font-bold tabular-nums">
