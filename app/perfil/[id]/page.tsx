@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { Target, Check, X } from "lucide-react";
-import { getProfile, getMatches, getUserPredictions } from "@/lib/queries";
+import { getProfile, getMatches, getUserPredictions, getBonuses } from "@/lib/queries";
 import { StageBadge } from "@/components/stage-badge";
 import { TeamBadge } from "@/components/team-badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,14 +18,16 @@ export default async function PerfilPage({
   const profile = await getProfile(id);
   if (!profile) notFound();
 
-  const [matches, preds] = await Promise.all([
+  const [matches, preds, bonuses] = await Promise.all([
     getMatches(),
     getUserPredictions(id),
+    getBonuses(),
   ]);
 
-  let total = 0;
-  let exact = 0;
-  let result = 0;
+  const bonus = bonuses.get(id);
+  let total = bonus?.points ?? 0;
+  let exact = bonus?.exact ?? 0;
+  let result = bonus?.result ?? 0;
   const matchById = new Map(matches.map((m) => [m.id, m]));
 
   // Predicciones de partidos ya jugados, ordenadas por fecha desc.
@@ -64,6 +66,11 @@ export default async function PerfilPage({
         <Stat label="Exactos" value={exact} />
         <Stat label="Resultados" value={result} />
       </div>
+      {bonus && bonus.points > 0 && (
+        <p className="text-center text-xs text-muted -mt-3">
+          Incluye {bonus.points} pts de arrastre de la quiniela anterior.
+        </p>
+      )}
 
       <section>
         <h2 className="font-display text-xl font-bold mb-2">Historial</h2>

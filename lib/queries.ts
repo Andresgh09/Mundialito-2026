@@ -83,11 +83,30 @@ export interface LeaderRow {
   played: number; // predicciones ya puntuadas
 }
 
+/** Puntaje "base" arrastrado desde la quiniela anterior (por usuario). */
+export interface Bonus {
+  points: number;
+  exact: number;
+  result: number;
+}
+
+export async function getBonuses(): Promise<Map<string, Bonus>> {
+  const raw = await getConfig("bonus");
+  if (!raw) return new Map();
+  try {
+    const obj = JSON.parse(raw) as Record<string, Bonus>;
+    return new Map(Object.entries(obj));
+  } catch {
+    return new Map();
+  }
+}
+
 /** Ranking agregado. Datos chicos (grupo de amigos) → se agrega en JS. */
 export async function getLeaderboard(): Promise<LeaderRow[]> {
-  const [profiles, predictions] = await Promise.all([
+  const [profiles, predictions, bonuses] = await Promise.all([
     getProfiles(),
     getAllPredictions(),
+    getBonuses(),
   ]);
 
   const rows = new Map<string, LeaderRow>();
@@ -109,6 +128,15 @@ export async function getLeaderboard(): Promise<LeaderRow[]> {
     row.played += 1;
     if (pred.points === 3) row.exact += 1;
     else if (pred.points === 1) row.result += 1;
+  }
+
+  // Arrastre de la quiniela anterior (puntaje base).
+  for (const [id, b] of bonuses) {
+    const row = rows.get(id);
+    if (!row) continue;
+    row.points += b.points;
+    row.exact += b.exact;
+    row.result += b.result;
   }
 
   return [...rows.values()].sort(
