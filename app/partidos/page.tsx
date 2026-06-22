@@ -7,7 +7,7 @@ import { StageBadge } from "@/components/stage-badge";
 import { Venue } from "@/components/venue";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatKickoff } from "@/lib/format";
-import { Lock } from "lucide-react";
+import { Lock, Users } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 export const dynamic = "force-dynamic";
@@ -86,30 +86,66 @@ export default async function PartidosPage() {
 
                 <Venue stadium={m.stadium} city={m.city} className="mt-2 justify-center" />
 
-                {locked && mPreds.length > 0 && (
-                  <details className="mt-3 group">
-                    <summary className="cursor-pointer text-xs font-medium text-muted hover:text-foreground list-none">
-                      Ver {mPreds.length} predicción(es)
-                    </summary>
-                    <ul className="mt-2 space-y-1">
-                      {mPreds.map((p) => (
-                        <li
-                          key={p.id}
-                          className={cn(
-                            "flex items-center justify-between text-sm",
-                            p.user_id === user?.id && "text-primary",
-                          )}
-                        >
-                          <span className="truncate">{nameById.get(p.user_id) ?? "?"}</span>
-                          <span className="flex items-center gap-2 tabular-nums">
-                            {p.home_pred} - {p.away_pred}
-                            <PointsBadge points={p.points} />
+                {locked && mPreds.length > 0 &&
+                  (() => {
+                    const sorted = [...mPreds].sort(
+                      (a, b) =>
+                        (b.points ?? -1) - (a.points ?? -1) ||
+                        (nameById.get(a.user_id) ?? "").localeCompare(
+                          nameById.get(b.user_id) ?? "",
+                        ),
+                    );
+                    const exactos = sorted.filter((p) => p.points === 3).length;
+                    return (
+                      <details className="mt-3" open={!finished}>
+                        <summary className="flex cursor-pointer items-center justify-between rounded-lg bg-elevated px-3 py-2 text-sm font-semibold list-none [&::-webkit-details-marker]:hidden">
+                          <span className="flex items-center gap-2">
+                            <Users className="h-4 w-4 text-primary" aria-hidden />
+                            Pronósticos de todos
                           </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
-                )}
+                          <span className="text-xs font-medium text-muted">
+                            {sorted.length}
+                            {finished && exactos > 0 ? ` · ${exactos} exacto${exactos === 1 ? "" : "s"}` : ""}
+                          </span>
+                        </summary>
+                        {sorted.length === 0 ? (
+                          <p className="mt-2 px-1 text-xs text-muted">
+                            Nadie pronosticó este partido.
+                          </p>
+                        ) : (
+                          <ul className="mt-2 space-y-1">
+                            {sorted.map((p) => {
+                              const isMe = p.user_id === user?.id;
+                              const name = nameById.get(p.user_id) ?? "?";
+                              return (
+                                <li
+                                  key={p.id}
+                                  className={cn(
+                                    "flex items-center justify-between rounded-md px-2 py-1.5 text-sm",
+                                    isMe ? "bg-primary/10" : "odd:bg-surface/40",
+                                  )}
+                                >
+                                  <span className="flex items-center gap-2 min-w-0">
+                                    <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-elevated text-[10px] font-bold text-primary">
+                                      {name.slice(0, 2).toUpperCase()}
+                                    </span>
+                                    <span className="truncate">
+                                      {name}
+                                      {isMe && <span className="text-primary text-xs ml-1">(vos)</span>}
+                                    </span>
+                                  </span>
+                                  <span className="flex items-center gap-2 shrink-0 tabular-nums font-medium">
+                                    {p.home_pred} - {p.away_pred}
+                                    <PointsBadge points={p.points} />
+                                  </span>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        )}
+                      </details>
+                    );
+                  })()}
               </CardContent>
             </Card>
           );
