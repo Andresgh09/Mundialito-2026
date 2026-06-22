@@ -68,7 +68,15 @@
 .bk-wrap {
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 8px 4px 16px;
+  /* full-bleed: usa todo el ancho de la pantalla, no la columna central */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding: 8px 16px 16px;
+}
+/* si el cuadro cabe en pantalla, centrarlo; si no, scrollea */
+.bk-wrap > .bk-node {
+  margin-left: auto;
+  margin-right: auto;
 }
 .bk-node {
   display: flex;
@@ -85,19 +93,19 @@
 }
 .bk-link {
   position: relative;
-  flex: 0 0 24px;
+  flex: 0 0 20px;
   align-self: stretch;
 }
 .bk-hlink {
-  flex: 0 0 24px;
+  flex: 0 0 20px;
   align-self: center;
   height: 2px;
   background: var(--color-border);
 }
 .bk-card {
   flex: 0 0 auto;
-  width: 132px;
-  margin: 7px 0;
+  width: 116px;
+  margin: 6px 0;
 }
 
 /* conexiones (lado izquierdo) */
@@ -109,14 +117,14 @@
   position: absolute;
   left: 100%;
   top: 50%;
-  width: 12px;
+  width: 10px;
   height: 2px;
   background: var(--color-border);
 }
 .bk-node:not(.bk-right) > .bk-link::before {
   content: "";
   position: absolute;
-  left: 12px;
+  left: 10px;
   top: 25%;
   height: 50%;
   width: 2px;
@@ -125,9 +133,9 @@
 .bk-node:not(.bk-right) > .bk-link::after {
   content: "";
   position: absolute;
-  left: 12px;
+  left: 10px;
   top: 50%;
-  width: 12px;
+  width: 10px;
   height: 2px;
   background: var(--color-border);
 }
@@ -138,14 +146,14 @@
   position: absolute;
   right: 100%;
   top: 50%;
-  width: 12px;
+  width: 10px;
   height: 2px;
   background: var(--color-border);
 }
 .bk-node.bk-right > .bk-link::before {
   content: "";
   position: absolute;
-  right: 12px;
+  right: 10px;
   top: 25%;
   height: 50%;
   width: 2px;
@@ -154,9 +162,9 @@
 .bk-node.bk-right > .bk-link::after {
   content: "";
   position: absolute;
-  right: 12px;
+  right: 10px;
   top: 50%;
-  width: 12px;
+  width: 10px;
   height: 2px;
   background: var(--color-border);
 }
