@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { supabaseAdmin } from "@/lib/supabase-server";
-import { createSession, destroySession } from "@/lib/auth";
+import { createSession, destroySession, requireUser } from "@/lib/auth";
 
 const nameSchema = z
   .string()
@@ -15,7 +15,7 @@ const pinSchema = z
   .string()
   .regex(/^\d{4}$/, "El PIN debe ser de 4 dígitos");
 
-export type AuthState = { error?: string };
+export type AuthState = { error?: string; ok?: boolean };
 
 /** Registro: código de grupo + nombre + PIN. El primer usuario es admin. */
 export async function registerAction(
@@ -106,4 +106,38 @@ export async function loginAction(
 export async function logoutAction(): Promise<void> {
   await destroySession();
   redirect("/login");
+}
+
+/** Cambiar el PIN del usuario logueado (pide el PIN actual). */
+export async function changePinAction(
+  _prev: AuthState,
+  formData: FormData,
+): Promise<AuthState> {
+  const user = await requireUser();
+  const current = String(formData.get("current") ?? "");
+  const next = pinSchema.safeParse(formData.get("pin"));
+  const next2 = String(formData.get("pin2") ?? "");
+
+  if (!next.success) return { error: next.error.issues[0].message };
+  if (next.data !== next2) return { error: "Los PIN nuevos no coinciden" };
+
+  const db = supabaseAdmin();
+  const { data: profile } = await db
+    .from("profiles")
+    .select("pin_hash")
+    .eq("id", user.id)
+    .maybeSingle();
+  if (!profile) return { error: "Perfil no encontrado" };
+
+  const ok = await bcrypt.compare(current, profile.pin_hash);
+  if (!ok) return { error: "El PIN actual es incorrecto" };
+
+  const pin_hash = await bcrypt.hash(next.data, 10);
+  const { error } = await db
+    .from("profiles")
+    .update({ pin_hash })
+    .eq("id", user.id);
+  if (error) return { error: "No se pudo actualizar el PIN" };
+
+  return { ok: true };
 }

@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   LogOut,
   LogIn,
+  KeyRound,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { logoutAction } from "@/app/actions/auth";
@@ -51,6 +52,13 @@ export function SiteNav({ user }: { user: SessionUser | null }) {
                 {user.name.slice(0, 2).toUpperCase()}
               </span>
               <span className="hidden sm:inline">{user.name}</span>
+            </Link>
+            <Link
+              href="/cuenta"
+              aria-label="Cambiar PIN"
+              className="grid h-9 w-9 place-items-center rounded-[var(--radius)] text-muted hover:bg-elevated hover:text-foreground transition-colors cursor-pointer"
+            >
+              <KeyRound className="h-4 w-4" aria-hidden />
             </Link>
             <form action={logoutAction}>
               <button
