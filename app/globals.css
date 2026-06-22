@@ -64,6 +64,103 @@
   }
 }
 
+/* ── Bracket / Llave ─────────────────────────────────────────────────────── */
+.bk-wrap {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 8px 4px 16px;
+}
+.bk-node {
+  display: flex;
+  align-items: center;
+}
+.bk-node.bk-right {
+  flex-direction: row-reverse;
+}
+.bk-sub {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-self: stretch;
+}
+.bk-link {
+  position: relative;
+  flex: 0 0 24px;
+  align-self: stretch;
+}
+.bk-hlink {
+  flex: 0 0 24px;
+  align-self: center;
+  height: 2px;
+  background: var(--color-border);
+}
+.bk-card {
+  flex: 0 0 auto;
+  width: 132px;
+  margin: 7px 0;
+}
+
+/* conexiones (lado izquierdo) */
+.bk-sub > * {
+  position: relative;
+}
+.bk-node:not(.bk-right) > .bk-sub > *::after {
+  content: "";
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  width: 12px;
+  height: 2px;
+  background: var(--color-border);
+}
+.bk-node:not(.bk-right) > .bk-link::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 25%;
+  height: 50%;
+  width: 2px;
+  background: var(--color-border);
+}
+.bk-node:not(.bk-right) > .bk-link::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  width: 12px;
+  height: 2px;
+  background: var(--color-border);
+}
+
+/* conexiones (lado derecho, espejado) */
+.bk-node.bk-right > .bk-sub > *::after {
+  content: "";
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  width: 12px;
+  height: 2px;
+  background: var(--color-border);
+}
+.bk-node.bk-right > .bk-link::before {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 25%;
+  height: 50%;
+  width: 2px;
+  background: var(--color-border);
+}
+.bk-node.bk-right > .bk-link::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  width: 12px;
+  height: 2px;
+  background: var(--color-border);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
