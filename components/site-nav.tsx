@@ -6,6 +6,8 @@ import {
   Trophy,
   ListChecks,
   CalendarDays,
+  LayoutGrid,
+  GitFork,
   ShieldCheck,
   LogOut,
   LogIn,
@@ -19,6 +21,8 @@ const tabs = [
   { href: "/", label: "Ranking", icon: Trophy },
   { href: "/predicciones", label: "Predecir", icon: ListChecks },
   { href: "/partidos", label: "Partidos", icon: CalendarDays },
+  { href: "/grupos", label: "Grupos", icon: LayoutGrid },
+  { href: "/llave", label: "Llave", icon: GitFork },
 ];
 
 export function SiteNav({ user }: { user: SessionUser | null }) {
