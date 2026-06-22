@@ -1,0 +1,30 @@
+name: Sync Mundial
+
+# Actualiza fixture, equipos clasificados, resultados y puntos automáticamente
+# llamando al endpoint /api/sync de la app desplegada. Cada 30 min.
+# Usa dos secrets del repo (Settings → Secrets → Actions):
+#   SYNC_URL    = https://<tu-app>.vercel.app/api/sync
+#   CRON_SECRET = el mismo valor que en Vercel
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch: {}
+
+# Evita correr dos a la vez si una se atrasa.
+concurrency:
+  group: sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Llamar al endpoint de sync
+        run: |
+          echo "Sincronizando…"
+          curl -fsS -X GET "$SYNC_URL" \
+            -H "Authorization: Bearer $CRON_SECRET"
+          echo ""
+        env:
+          SYNC_URL: ${{ secrets.SYNC_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
